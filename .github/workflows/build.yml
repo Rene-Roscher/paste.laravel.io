@@ -38,7 +38,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 17
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
