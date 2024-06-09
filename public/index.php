@@ -34,6 +34,13 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 require __DIR__.'/../vendor/autoload.php';
 
 /*
+| Cloudflare Proxy
+*/
+if (isset($_SERVER["HTTP_CF_CONNECTING_IP"])) {
+    $_SERVER['REMOTE_ADDR'] = $_SERVER["HTTP_CF_CONNECTING_IP"];
+}
+
+/*
 |--------------------------------------------------------------------------
 | Run The Application
 |--------------------------------------------------------------------------
