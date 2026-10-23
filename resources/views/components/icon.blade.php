@@ -8,6 +8,7 @@
         'save' => 'M5 3h11l3 3v15H5zM8 3v6h7V3M8 21v-7h8v7',
         'reset' => 'M3 12a9 9 0 1 0 3-6.7M3 4v5h5',
         'back' => 'M10 6l-6 6 6 6M4 12h16',
+        'history' => 'M3 12a9 9 0 1 0 3-6.7M3 4v5h5M12 7v5l3 2',
         'download' => 'M12 4v11M7 11l5 5 5-5M5 20h14',
     ];
 @endphp

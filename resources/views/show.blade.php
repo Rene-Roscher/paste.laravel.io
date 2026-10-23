@@ -7,7 +7,11 @@
         <x-action label="Raw" icon="raw" :href="route('raw', $paste->hash)" blank />
     </x-slot:actions>
 
-    <div id="editor" class="editor" data-mode="view"></div>
+    <div id="editor" class="editor" data-mode="view"
+         data-hash="{{ $paste->hash }}"
+         data-created-at="{{ $paste->created_at?->toIso8601String() }}"
+         data-mine="{{ session('created') ? '1' : '0' }}"
+         data-parent="{{ $paste->parent_id ? '1' : '0' }}"></div>
     {{-- Shown until Monaco is ready and when JavaScript is unavailable. --}}
     <pre id="code-fallback" class="fallback-view"><code>{{ $paste->code }}</code></pre>
 </x-layout>

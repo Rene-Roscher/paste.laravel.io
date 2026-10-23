@@ -1,19 +1,10 @@
 <p align="center">
-    <img src="https://github.com/laravelio/art/blob/main/laravelio-logo-lg.svg" width="400" />
+    <img src="public/images/livck-mark.svg" width="64" alt="LIVCK" />
 </p>
 
-<p align="center">
-    <a href="https://github.com/laravelio/paste.laravel.io/actions?query=workflow%3ATests">
-        <img src="https://github.com/laravelio/paste.laravel.io/workflows/Tests/badge.svg" alt="Tests" />
-    </a>
-    <a href="https://github.com/laravelio/paste.laravel.io/actions/workflows/coding-standards.yml">
-        <img src="https://github.com/laravelio/paste.laravel.io/actions/workflows/coding-standards.yml/badge.svg" alt="Coding Standards" />
-    </a>
-</p>
+# LIVCK Paste
 
-# Laravel.io Pastebin
-
-This is the repository for [the Laravel.io pastebin](https://paste.laravel.io). The code is entirely open source and licensed under [the MIT license](license.md). We welcome your contributions but we encourage you to read the [the contributing guide](CONTRIBUTING.md) before creating an issue or sending in a pull request. Read the installation guide below to get started with setting up the app on your machine.
+A small, self-hosted pastebin built with Laravel 13 and the Monaco editor. Originally forked from [laravelio/paste.laravel.io](https://github.com/laravelio/paste.laravel.io) (MIT).
 
 ## Requirements
 
@@ -25,7 +16,7 @@ The following tools are required in order to start the installation.
 
 ## Installation
 
-1. Clone this repository locally with `git clone git@github.com:laravelio/paste.laravel.io.git paste.laravel.io`
+1. Clone this repository locally with `git clone <this repository> paste`
 2. Copy the `.env.example` file to `.env`
 3. Install the PHP dependencies with `composer install`
 4. Generate a new app key with `php artisan key:generate`
@@ -50,11 +41,7 @@ The `pastes` table and its three migrations are unchanged, so an existing databa
 (`CACHE_DRIVER` is still read as a fallback for `CACHE_STORE`); `APP_KEY`, `APP_URL` and the `DB_*` values stay the same.
 
 The editor is [Monaco](https://microsoft.github.io/monaco-editor/), bundled by Vite together with the fonts
-(Inter and JetBrains Mono), so the app makes no requests to third-party hosts.
-
-## Maintainers
-
-The Laravel.io pastebin is currently maintained by [Dries Vints](https://github.com/driesvints) and [Joe Dixon](https://github.com/joedixon). If you have any questions please don't hesitate to create an issue on this repo.
+(Plus Jakarta Sans and Geist Mono, as per the LIVCK brand), so the app makes no requests to third-party hosts.
 
 ## Contributing
 

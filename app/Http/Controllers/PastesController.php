@@ -14,7 +14,7 @@ class PastesController
     {
         $paste = Paste::createFromCode($request->validated('code'));
 
-        return redirect()->route('show', $paste->hash);
+        return redirect()->route('show', $paste->hash)->with('created', true);
     }
 
     public function show(Paste $paste): View
@@ -40,6 +40,6 @@ class PastesController
     {
         $fork = Paste::createFromCode($request->validated('code'), $paste);
 
-        return redirect()->route('show', $fork->hash);
+        return redirect()->route('show', $fork->hash)->with('created', true);
     }
 }

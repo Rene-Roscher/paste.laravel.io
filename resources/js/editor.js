@@ -17,7 +17,7 @@ function defineThemes() {
     // Same colours as the surrounding UI so the editor blends into the page.
     monaco.editor.defineTheme('paste-dark', {
         base: 'vs-dark', inherit: true, rules: [],
-        colors: { 'editor.background': '#1e1e1e', 'editorGutter.background': '#1e1e1e' },
+        colors: { 'editor.background': '#0F192A', 'editorGutter.background': '#0F192A' },
     });
     monaco.editor.defineTheme('paste-light', {
         base: 'vs', inherit: true, rules: [],
@@ -36,7 +36,7 @@ export async function boot() {
     const code = readOnly ? (fallback?.textContent ?? '') : (source?.value ?? '');
 
     // Make sure the local web font is ready before Monaco measures glyph widths.
-    try { await document.fonts.load('14px "JetBrains Mono Variable"'); } catch (e) { /* ignore */ }
+    try { await document.fonts.load('14px "Geist Mono Variable"'); } catch (e) { /* ignore */ }
 
     defineThemes();
 
@@ -171,7 +171,12 @@ function wireForm(editor, source) {
     const form = document.getElementById('paste-form');
     const initial = editor.getValue();
 
+    // The textarea is hidden now, so native `required` validation could not focus it. We validate ourselves.
+    source.required = false;
+    source.removeAttribute('maxlength');
+
     const sync = () => { source.value = editor.getValue(); };
+    form.addEventListener('formdata', (e) => e.formData.set('code', editor.getValue()));
     form.addEventListener('submit', (e) => {
         sync();
         if (!source.value.trim()) {
