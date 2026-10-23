@@ -12,7 +12,6 @@
          data-created-at="{{ $paste->created_at?->toIso8601String() }}"
          data-mine="{{ session('created') ? '1' : '0' }}"
          data-parent="{{ $paste->parent_id ? '1' : '0' }}"></div>
-    <div id="preview" class="preview" hidden><div class="preview-body"></div></div>
     {{-- Shown until Monaco is ready and when JavaScript is unavailable. --}}
     <pre id="code-fallback" class="fallback-view"><code>{{ $paste->code }}</code></pre>
 </x-layout>

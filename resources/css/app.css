@@ -51,11 +51,17 @@
     --color-danger: var(--danger);
 }
 
+@keyframes drawer-in { from { opacity: 0; transform: translateX(12px); } }
+@keyframes palette-in { from { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+
 @layer base {
     html, body { @apply h-full m-0; }
     body { @apply bg-surface text-ink font-sans text-[13px] leading-snug antialiased overflow-hidden; }
+    .drawer-panel:focus { outline: none; }
     :focus-visible { @apply outline-2 -outline-offset-2 outline-brand; }
     [hidden] { display: none !important; }
+    ::-webkit-scrollbar { @apply size-2.5; }
+    ::-webkit-scrollbar-thumb { @apply rounded-full border-2 border-solid border-transparent bg-muted/40 bg-clip-content hover:bg-muted/60; }
 }
 
 @layer components {
@@ -71,12 +77,8 @@
 
     .btn { @apply inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-transparent bg-transparent px-2.5 text-ink hover:bg-hover; }
     .btn-primary { @apply bg-brand font-semibold text-brand-fg hover:bg-brand/85; }
-    .btn[aria-pressed='true'] { @apply bg-hover; }
-    .icon { @apply flex-none; }
+        .icon { @apply flex-none; }
     kbd { @apply rounded border border-line bg-surface px-1.5 py-px font-sans text-[11px] text-muted; }
-
-    .segmented { @apply inline-flex rounded-md border border-line p-0.5; }
-    .segmented .btn { @apply h-6 px-2; }
 
     .workspace { @apply relative min-h-0 min-w-0; }
     .editor-form { @apply m-0 h-full; }
@@ -104,7 +106,7 @@
     /* Overlays: command palette + settings drawer */
     .overlay { @apply fixed inset-0 z-50 flex bg-[var(--scrim)]; }
     .palette { @apply items-start justify-center px-4 pb-4 pt-[12vh]; }
-    .palette-box { @apply flex max-h-[70vh] w-[min(640px,100%)] flex-col overflow-hidden rounded-xl border border-line bg-raised shadow-2xl; }
+    .palette-box { @apply motion-safe:animate-[palette-in_120ms_ease-out] flex max-h-[70vh] w-[min(640px,100%)] flex-col overflow-hidden rounded-xl border border-line bg-raised shadow-2xl; }
     #palette-input { @apply w-full border-0 border-b border-line bg-transparent px-4 py-3.5 text-[15px] text-ink outline-0; }
     #palette-list { @apply m-0 list-none overflow-auto p-1.5; }
     .palette-heading { @apply px-2.5 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wider text-muted; }
@@ -118,11 +120,12 @@
     .palette-foot { @apply flex gap-4 border-t border-line px-3 py-1.5 text-[11px] text-muted; }
     @media (max-width: 640px) { .palette-meta { display: none; } .palette { @apply pt-[6vh]; } }
 
-    .drawer { @apply justify-end; }
-    .drawer-panel { @apply flex h-full w-[min(380px,100%)] flex-col border-l border-line bg-raised shadow-2xl; }
-    .drawer-head { @apply flex items-center justify-between border-b border-line px-4 py-3 text-sm font-semibold; }
-    .drawer-body { @apply flex-1 space-y-6 overflow-auto px-4 py-4; }
-    .drawer-foot { @apply flex items-center justify-between border-t border-line px-4 py-3; }
+    /* Floating card: detached from the top, right and bottom edge, softly rounded. */
+    .drawer { @apply items-stretch justify-end p-3 max-sm:p-2; }
+    .drawer-panel { @apply flex w-[min(400px,100%)] flex-col overflow-hidden rounded-2xl border border-line bg-raised shadow-2xl ring-1 ring-black/10 motion-safe:animate-[drawer-in_160ms_ease-out]; }
+    .drawer-head { @apply flex items-center justify-between border-b border-line py-2.5 pl-5 pr-3 text-sm font-semibold; }
+    .drawer-body { @apply flex-1 space-y-6 overflow-auto px-5 py-4; }
+    .drawer-foot { @apply flex items-center justify-between border-t border-line px-3 py-2.5; }
     .group-title { @apply mb-2 text-[11px] font-medium uppercase tracking-wider text-muted; }
     .setting { @apply flex items-center justify-between gap-4 py-1.5; }
     .setting label, .setting .label { @apply cursor-pointer text-ink; }
@@ -131,30 +134,3 @@
     .setting input[type='checkbox'] { @apply size-4 cursor-pointer accent-brand; }
     .shortcuts { @apply grid grid-cols-[1fr_auto] gap-x-4 gap-y-1.5 text-muted; }
 }
-
-/* Rendered markdown (preview). Output is sanitised in JS and the CSP blocks scripts and remote images. */
-.preview { @apply absolute inset-0 overflow-auto bg-surface; }
-.preview-body { @apply mx-auto max-w-3xl px-6 py-8 text-[15px]/7 text-ink; overflow-wrap: anywhere; }
-.preview-body > :first-child { margin-top: 0; }
-.preview-body h1, .preview-body h2, .preview-body h3, .preview-body h4 { @apply mb-3 mt-8 font-semibold leading-tight; }
-.preview-body h1 { @apply border-b border-line pb-2 text-3xl; }
-.preview-body h2 { @apply border-b border-line pb-2 text-2xl; }
-.preview-body h3 { @apply text-xl; }
-.preview-body h4 { @apply text-base; }
-.preview-body p, .preview-body ul, .preview-body ol, .preview-body blockquote, .preview-body pre, .preview-body table { @apply my-4; }
-.preview-body ul { @apply list-disc pl-6; }
-.preview-body ol { @apply list-decimal pl-6; }
-.preview-body li > ul, .preview-body li > ol { @apply my-1; }
-.preview-body li:has(> input[type='checkbox']) { @apply list-none; margin-left: -1.25rem; }
-.preview-body input[type='checkbox'] { @apply mr-2 accent-brand; }
-.preview-body a { @apply text-brand underline underline-offset-2; }
-:root:not([data-theme='dark']) .preview-body a { @apply text-emerald-700; }
-.preview-body blockquote { @apply border-l-4 border-line pl-4 text-muted; }
-.preview-body hr { @apply my-8 border-line; }
-.preview-body code { @apply rounded bg-raised px-1.5 py-0.5 font-mono text-[0.9em]; }
-.preview-body pre { @apply overflow-auto rounded-lg border border-line bg-raised p-4 text-[13px]/6; }
-.preview-body pre code { @apply bg-transparent p-0; }
-.preview-body table { @apply block w-full overflow-auto border-collapse; }
-.preview-body th, .preview-body td { @apply border border-line px-3 py-1.5; }
-.preview-body th { @apply bg-raised font-semibold; }
-.preview-body img { @apply h-auto max-w-full rounded; }

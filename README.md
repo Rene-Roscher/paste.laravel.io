@@ -45,7 +45,7 @@ The editor is [Monaco](https://microsoft.github.io/monaco-editor/), bundled by V
 
 ## Contributing
 
-Please see [the contributing guide](contributing.md) for details.
+Please see [the contributing guide](CONTRIBUTING.md) for details.
 
 ## Code of Conduct
 
@@ -57,4 +57,4 @@ Please review [our security policy](.github/SECURITY.md) on how to report securi
 
 ## License
 
-The MIT License. Please see [the license file](license.md) for more information.
+The MIT License. Please see [the license file](LICENSE.md) for more information.

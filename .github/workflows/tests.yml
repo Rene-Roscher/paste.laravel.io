@@ -20,15 +20,6 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-interaction
 
-      - name: Install NPM dependencies
-        run: npm ci
-
-      - name: Compile assets
-        run: npm run build
-
       - name: Execute tests
         run: vendor/bin/phpunit
 
-      - name: Deploy
-        if: github.ref_name == 'main'
-        run: curl ${{ secrets.ENVOYER_HOOK }}?sha=${{ github.sha }}

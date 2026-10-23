@@ -35,10 +35,6 @@
             <span class="filename" title="{{ $title }}">{{ $title }}</span>
         @endisset
         <nav class="actions">
-            <div class="segmented" id="view-toggle" role="group" aria-label="View" hidden>
-                <button type="button" class="btn" id="view-source" aria-pressed="true">Source</button>
-                <button type="button" class="btn" id="view-preview" aria-pressed="false">Preview</button>
-            </div>
             {{ $actions ?? '' }}
             <span class="sep" aria-hidden="true"></span>
             <button type="button" class="btn" id="open-settings" title="Settings (Ctrl+,)" aria-label="Settings">
@@ -79,7 +75,7 @@
     </div>
 </div>
 <div id="settings" class="overlay drawer" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
-    <div class="drawer-panel">
+    <div class="drawer-panel" tabindex="-1">
         <div class="drawer-head">
             <span id="settings-title">Settings</span>
             <button type="button" class="btn" id="settings-close" aria-label="Close settings">✕</button>
@@ -112,12 +108,6 @@
                 <div class="setting"><label for="s-spaces">Indent with spaces</label><input id="s-spaces" type="checkbox" data-setting="insertSpaces"></div>
                 <div class="setting"><label for="s-close">Auto-close brackets and quotes<span class="hint">Auto skips plain text and markdown</span></label>
                     <select id="s-close" data-setting="autoClosing"><option value="auto">Auto</option><option value="on">On</option><option value="off">Off</option></select></div>
-            </section>
-
-            <section>
-                <h3 class="group-title">Markdown</h3>
-                <div class="setting"><label for="s-md">Open markdown pastes as</label>
-                    <select id="s-md" data-setting="markdown"><option value="preview">Preview</option><option value="source">Source</option></select></div>
             </section>
 
             <section>

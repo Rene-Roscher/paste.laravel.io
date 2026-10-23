@@ -29,10 +29,6 @@ function commands() {
         { label: 'Toggle light / dark theme', hint: 'Command', run: toggleTheme },
         { label: 'Open settings', hint: 'Ctrl ,', run: openSettings },
     ];
-    const toggle = document.getElementById('view-toggle');
-    if (toggle && !toggle.hidden) {
-        cmds.push({ label: 'Toggle markdown preview', hint: 'Command', run: () => document.querySelector('#view-toggle button[aria-pressed="false"]')?.click() });
-    }
     if (here?.hash) {
         cmds.push(
             { label: 'Copy paste', hint: 'Command', run: () => document.getElementById('copy')?.click() },

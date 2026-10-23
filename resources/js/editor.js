@@ -111,53 +111,13 @@ export async function boot() {
     window.addEventListener('themechange', () => monaco.editor.setTheme(themeName()));
     window.addEventListener('settingschange', () => document.fonts.ready.then(() => monaco.editor.remeasureFonts()));
 
-    const view = wireMarkdown(editor, model, container, readOnly);
     wireStatusBar(editor, model, !readOnly);
 
     if (readOnly) {
         document.getElementById('copy')?.addEventListener('click', (e) => copy(editor.getValue(), e.currentTarget));
     } else {
-        wireForm(editor, source, view);
+        wireForm(editor, source);
     }
-}
-
-/** Source / Preview toggle, only offered for markdown. Returns helpers used by the form. */
-function wireMarkdown(editor, model, container, readOnly) {
-    const toggle = document.getElementById('view-toggle');
-    const preview = document.getElementById('preview');
-    const body = preview.querySelector('.preview-body');
-    const buttons = { source: document.getElementById('view-source'), preview: document.getElementById('view-preview') };
-    let mode = 'source';
-
-    const show = async (next) => {
-        mode = next;
-        buttons.source.setAttribute('aria-pressed', String(next === 'source'));
-        buttons.preview.setAttribute('aria-pressed', String(next === 'preview'));
-        if (next === 'preview') {
-            const { renderMarkdown } = await import('./markdown');
-            await renderMarkdown(model.getValue(), body, monaco);
-            preview.scrollTop = 0;
-        }
-        preview.hidden = next !== 'preview';
-        container.hidden = next === 'preview';
-        if (next === 'source') { editor.layout(); editor.focus(); }
-    };
-
-    const update = () => {
-        const markdown = model.getLanguageId() === 'markdown';
-        toggle.hidden = !markdown;
-        if (!markdown && mode === 'preview') show('source');
-    };
-
-    buttons.source.addEventListener('click', () => show('source'));
-    buttons.preview.addEventListener('click', () => show('preview'));
-    model.onDidChangeLanguage(update);
-    update();
-
-    // Markdown pastes open rendered by default (configurable); new pastes always start in the editor.
-    if (readOnly && model.getLanguageId() === 'markdown' && getSettings().markdown === 'preview') show('preview');
-
-    return { current: () => mode };
 }
 
 function wireStatusBar(editor, model, autoDetect) {
@@ -224,7 +184,7 @@ function wireStatusBar(editor, model, autoDetect) {
     });
 }
 
-function wireForm(editor, source, view) {
+function wireForm(editor, source) {
     const form = document.getElementById('paste-form');
     const initial = editor.getValue();
 
@@ -243,7 +203,7 @@ function wireForm(editor, source, view) {
     });
     form.addEventListener('reset', () => {
         editor.setValue(initial);
-        if (view.current() === 'source') editor.focus();
+        editor.focus();
     });
 
     // Ctrl/Cmd+S saves, also while the editor has focus.

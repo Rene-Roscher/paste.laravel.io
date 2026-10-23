@@ -46,7 +46,7 @@ class PastebinTest extends TestCase
     #[Test]
     public function unknown_pastes_return_404(): void
     {
-        $this->get('/does-not-exist')->assertNotFound();
+        $this->get('/does-not-exist')->assertNotFound()->assertSee('Paste not found');
     }
 
     #[Test]
@@ -97,5 +97,15 @@ class PastebinTest extends TestCase
             ['id', 'parent_id', 'code', 'hash', 'created_at', 'updated_at'],
             Schema::getColumnListing('pastes'),
         );
+    }
+
+    #[Test]
+    public function posting_is_rate_limited(): void
+    {
+        foreach (range(1, 30) as $i) {
+            $this->post('/', ['code' => "paste {$i}"])->assertRedirect();
+        }
+
+        $this->post('/', ['code' => 'one too many'])->assertStatus(429);
     }
 }

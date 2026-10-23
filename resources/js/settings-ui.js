@@ -27,7 +27,7 @@ export function openSettings() {
     lastFocus = document.activeElement;
     sync();
     drawer.hidden = false;
-    drawer.querySelector('[data-setting]')?.focus();
+    drawer.querySelector('.drawer-panel').focus();
 }
 
 export function closeSettings() {

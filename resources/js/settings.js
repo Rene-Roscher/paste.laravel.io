@@ -12,7 +12,6 @@ export const DEFAULTS = {
     tabSize: 4,
     insertSpaces: true,
     autoClosing: 'auto', // auto (code only) | on | off
-    markdown: 'preview', // preview | source: how markdown pastes open
     history: true, // remember visited pastes for Ctrl+K
 };
 

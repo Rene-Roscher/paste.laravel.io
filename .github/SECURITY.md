@@ -1,5 +1,6 @@
 # Reporting a Vulnerability
 
-**PLEASE DON'T DISCLOSE SECURITY-RELATED ISSUES PUBLICLY.**
+**Please don't disclose security issues publicly.**
 
-If you discover any security related issues, please email hello@laravel.io instead of using the issue tracker.
+Use GitHub's private vulnerability reporting (the "Security" tab of this repository, "Report a vulnerability")
+instead of opening an issue.
