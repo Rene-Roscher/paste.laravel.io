@@ -4,49 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
 
+/**
+ * Maps the existing `pastes` table 1:1 (id, parent_id, code, hash, created_at, updated_at).
+ * Do not change column names or hash format, production data relies on them.
+ */
 class Paste extends Model
 {
     use HasFactory;
 
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = 'pastes';
 
-    public static function fromRequest(Request $request): self
+    public static function createFromCode(string $code, ?self $parent = null): self
     {
-        return static::createNew(new static(), $request);
-    }
-
-    public static function fromFork(self $fork, Request $request): self
-    {
-        $paste = new static();
-        $paste->parent_id = $fork->id;
-
-        return static::createNew($paste, $request);
-    }
-
-    private static function createNew(self $paste, Request $request): self
-    {
-        $paste->code = $request->get('code');
-        $paste->hash = Uuid::uuid4()->toString();
-
+        $paste = new static;
+        $paste->parent_id = $parent?->id;
+        $paste->code = $code;
+        $paste->hash = (string) Str::uuid();
         $paste->save();
 
         return $paste;
     }
 
-    /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'hash';
     }

@@ -1,36 +1,28 @@
 <p align="center">
-    <img src="https://github.com/laravelio/art/blob/main/laravelio-logo-lg.svg" width="400" />
+    <img src="public/images/livck-mark.svg" width="64" alt="LIVCK" />
 </p>
 
-<p align="center">
-    <a href="https://github.com/laravelio/paste.laravel.io/actions?query=workflow%3ATests">
-        <img src="https://github.com/laravelio/paste.laravel.io/workflows/Tests/badge.svg" alt="Tests" />
-    </a>
-    <a href="https://github.com/laravelio/paste.laravel.io/actions/workflows/coding-standards.yml">
-        <img src="https://github.com/laravelio/paste.laravel.io/actions/workflows/coding-standards.yml/badge.svg" alt="Coding Standards" />
-    </a>
-</p>
+# LIVCK Paste
 
-# Laravel.io Pastebin
-
-This is the repository for [the Laravel.io pastebin](https://paste.laravel.io). The code is entirely open source and licensed under [the MIT license](license.md). We welcome your contributions but we encourage you to read the [the contributing guide](CONTRIBUTING.md) before creating an issue or sending in a pull request. Read the installation guide below to get started with setting up the app on your machine.
+A small, self-hosted pastebin built with Laravel 13 and the Monaco editor. Originally forked from [laravelio/paste.laravel.io](https://github.com/laravelio/paste.laravel.io) (MIT).
 
 ## Requirements
 
 The following tools are required in order to start the installation.
 
-- PHP 8.2
+- PHP 8.3+
 - [Composer](https://getcomposer.org/download/)
-- [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [Node.js 22+ / NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ## Installation
 
-1. Clone this repository locally with `git clone git@github.com:laravelio/paste.laravel.io.git paste.laravel.io`
+1. Clone this repository locally with `git clone <this repository> paste`
 2. Copy the `.env.example` file to `.env`
 3. Install the PHP dependencies with `composer install`
 4. Generate a new app key with `php artisan key:generate`
-5. Install and compile the front-end dependencies with `npm install && npm run dev`
-6. Serve the website locally by running `php artisan serve`
+5. Run the migrations with `php artisan migrate`
+6. Install and compile the front-end dependencies with `npm install && npm run build` (use `npm run dev` while developing)
+7. Serve the website locally by running `php artisan serve`
 
 You can now visit the app in your browser by visiting [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
@@ -39,16 +31,21 @@ You can now visit the app in your browser by visiting [http://127.0.0.1:8000](ht
 Command | Description
 --- | ---
 **`php artisan test`** | Run the tests
-`php artisan migrate:fresh --seed` | Reset the database
+`php artisan migrate:fresh` | Reset the database
 `npm run dev` | Watch for changes in CSS and JS files
 
-## Maintainers
+## Upgrading an existing installation
 
-The Laravel.io pastebin is currently maintained by [Dries Vints](https://github.com/driesvints) and [Joe Dixon](https://github.com/joedixon). If you have any questions please don't hesitate to create an issue on this repo.
+The `pastes` table and its three migrations are unchanged, so an existing database (MySQL/MariaDB) keeps working as is:
+`php artisan migrate` reports "Nothing to migrate" and no data is touched. Existing `.env` files keep working
+(`CACHE_DRIVER` is still read as a fallback for `CACHE_STORE`); `APP_KEY`, `APP_URL` and the `DB_*` values stay the same.
+
+The editor is [Monaco](https://microsoft.github.io/monaco-editor/), bundled by Vite together with the fonts
+(Plus Jakarta Sans and Geist Mono, as per the LIVCK brand), so the app makes no requests to third-party hosts.
 
 ## Contributing
 
-Please see [the contributing guide](contributing.md) for details.
+Please see [the contributing guide](CONTRIBUTING.md) for details.
 
 ## Code of Conduct
 
@@ -60,4 +57,4 @@ Please review [our security policy](.github/SECURITY.md) on how to report securi
 
 ## License
 
-The MIT License. Please see [the license file](license.md) for more information.
+The MIT License. Please see [the license file](LICENSE.md) for more information.

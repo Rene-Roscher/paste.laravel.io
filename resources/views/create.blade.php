@@ -1,18 +1,9 @@
-@extends('layouts.app')
+<x-layout>
+    <x-slot:title>untitled</x-slot:title>
+    <x-slot:actions>
+        <x-action label="Save" icon="save" type="submit" form="paste-form" id="save" class="btn-primary" />
+        <x-action label="Reset" icon="reset" type="reset" form="paste-form" id="reset" />
+    </x-slot:actions>
 
-@section('content')
-    <form action="{{ route('home') }}" method="POST">
-        @csrf
-
-        <div x-data="{ isOpen: false }" class="h-screen flex overflow-hidden">
-            <x-main>
-                @include('_editor', ['padding' => true])
-            </x-main>
-
-            <x-nav>
-                <x-nav-item id="save" label="Save" type="submit" icon="heroicon-o-folder-plus" />
-                <x-nav-item label="Reset" type="reset" icon="iconoir-delete-circle" />
-            </x-nav>
-        </div>
-    </form>
-@stop
+    @include('partials.editor-form', ['action' => route('home')])
+</x-layout>

@@ -1,0 +1,136 @@
+@import '@fontsource-variable/plus-jakarta-sans';
+@import '@fontsource-variable/geist-mono';
+
+/* `theme(static)` emits the whole default palette as CSS variables, so the tokens below can reference it. */
+@import 'tailwindcss/theme.css' layer(theme) theme(static);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+@theme {
+    --font-sans: 'Plus Jakarta Sans Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    --color-brand: #00e091; /* LIVCK green */
+    --color-brand-fg: #04130d;
+}
+
+/* Semantic tokens. Components only use these, so a theme is just a palette mapping (light below, dark further down). */
+:root {
+    --surface: var(--color-white);
+    --surface-raised: var(--color-neutral-50);
+    --surface-hover: var(--color-neutral-200);
+    --line: var(--color-neutral-200);
+    --text: var(--color-neutral-900);
+    --text-muted: var(--color-neutral-500);
+    --danger: var(--color-red-600);
+    --scrim: rgb(0 0 0 / 0.35);
+    color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+    /* Near-black neutrals: editor on neutral-950, chrome one step above. */
+    --surface: var(--color-neutral-950);
+    --surface-raised: #101010;
+    --surface-hover: var(--color-neutral-800);
+    --line: var(--color-neutral-800);
+    --text: var(--color-neutral-200);
+    --text-muted: var(--color-neutral-500);
+    --danger: var(--color-red-400);
+    --scrim: rgb(0 0 0 / 0.6);
+    color-scheme: dark;
+}
+
+@theme inline {
+    --color-surface: var(--surface);
+    --color-raised: var(--surface-raised);
+    --color-hover: var(--surface-hover);
+    --color-line: var(--line);
+    --color-ink: var(--text);
+    --color-muted: var(--text-muted);
+    --color-danger: var(--danger);
+}
+
+@keyframes drawer-in { from { opacity: 0; transform: translateX(12px); } }
+@keyframes palette-in { from { opacity: 0; transform: translateY(-6px) scale(0.98); } }
+
+@layer base {
+    html, body { @apply h-full m-0; }
+    body { @apply bg-surface text-ink font-sans text-[13px] leading-snug antialiased overflow-hidden; }
+    .drawer-panel:focus { outline: none; }
+    :focus-visible { @apply outline-2 -outline-offset-2 outline-brand; }
+    [hidden] { display: none !important; }
+    ::-webkit-scrollbar { @apply size-2.5; }
+    ::-webkit-scrollbar-thumb { @apply rounded-full border-2 border-solid border-transparent bg-muted/40 bg-clip-content hover:bg-muted/60; }
+}
+
+@layer components {
+    .sr-only { @apply absolute -m-px size-px overflow-hidden whitespace-nowrap border-0 p-0; clip: rect(0, 0, 0, 0); }
+
+    .app { @apply grid h-dvh grid-rows-[40px_minmax(0,1fr)_24px]; }
+
+    .titlebar { @apply flex min-w-0 items-center gap-3 border-b border-line bg-raised pl-3 pr-2; }
+    .brand { @apply inline-flex flex-none items-center rounded-md text-ink; }
+    .filename { @apply min-w-0 truncate border-l border-line pl-3 font-mono text-xs text-muted; }
+    .actions { @apply ml-auto flex flex-none items-center gap-1; }
+    .actions .sep { @apply mx-1 h-4 w-px bg-line; }
+
+    .btn { @apply inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-md border border-transparent bg-transparent px-2.5 text-ink hover:bg-hover; }
+    .btn-primary { @apply bg-brand font-semibold text-brand-fg hover:bg-brand/85; }
+        .icon { @apply flex-none; }
+    kbd { @apply rounded border border-line bg-surface px-1.5 py-px font-sans text-[11px] text-muted; }
+
+    .workspace { @apply relative min-h-0 min-w-0; }
+    .editor-form { @apply m-0 h-full; }
+    .editor { @apply size-full; }
+    .fallback-editor, .fallback-view { @apply m-0 block size-full resize-none overflow-auto border-0 bg-surface px-4 py-3 font-mono text-sm/relaxed text-ink outline-0; tab-size: 4; }
+
+    .statusbar { @apply flex min-w-0 items-center gap-0.5 overflow-hidden border-t border-line bg-raised px-1 text-xs text-muted; }
+    .status-item { @apply whitespace-nowrap px-2 leading-[22px]; }
+    .status-error { @apply truncate font-semibold text-danger; }
+    .status-btn, .status-select select { @apply cursor-pointer rounded bg-transparent text-inherit hover:bg-hover hover:text-ink; font: inherit; }
+    .status-select select { @apply h-5 border-0 px-1; }
+    .status-select select option { @apply bg-surface text-ink; }
+    .spacer { @apply flex-1; }
+
+    @media (max-width: 640px) {
+        .btn span, .btn kbd { display: none; }
+        .btn { @apply px-2; }
+        .filename, #status-count { display: none; }
+    }
+    @media print {
+        .titlebar, .statusbar { display: none; }
+        body { overflow: visible; }
+    }
+
+    /* Overlays: command palette + settings drawer */
+    .overlay { @apply fixed inset-0 z-50 flex bg-[var(--scrim)]; }
+    .palette { @apply items-start justify-center px-4 pb-4 pt-[12vh]; }
+    .palette-box { @apply motion-safe:animate-[palette-in_120ms_ease-out] flex max-h-[70vh] w-[min(640px,100%)] flex-col overflow-hidden rounded-xl border border-line bg-raised shadow-2xl; }
+    #palette-input { @apply w-full border-0 border-b border-line bg-transparent px-4 py-3.5 text-[15px] text-ink outline-0; }
+    #palette-list { @apply m-0 list-none overflow-auto p-1.5; }
+    .palette-heading { @apply px-2.5 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wider text-muted; }
+    .palette-item { @apply flex cursor-pointer items-center gap-3 rounded-md px-2.5 py-2; }
+    .palette-item.active { @apply bg-brand text-brand-fg; }
+    .palette-main { @apply min-w-0 flex-1 truncate font-mono text-[13px]; }
+    .palette-meta { @apply flex-none whitespace-nowrap text-[11px] text-muted; }
+    .palette-item.active .palette-meta { @apply text-inherit opacity-80; }
+    .palette-del { @apply flex-none cursor-pointer rounded border-0 bg-transparent px-1 text-base leading-none text-inherit opacity-60 hover:bg-black/15 hover:opacity-100; }
+    .palette-empty { @apply p-4 text-center text-muted; }
+    .palette-foot { @apply flex gap-4 border-t border-line px-3 py-1.5 text-[11px] text-muted; }
+    @media (max-width: 640px) { .palette-meta { display: none; } .palette { @apply pt-[6vh]; } }
+
+    /* Floating card: detached from the top, right and bottom edge, softly rounded. */
+    .drawer { @apply items-stretch justify-end p-3 max-sm:p-2; }
+    .drawer-panel { @apply flex w-[min(400px,100%)] flex-col overflow-hidden rounded-2xl border border-line bg-raised shadow-2xl ring-1 ring-black/10 motion-safe:animate-[drawer-in_160ms_ease-out]; }
+    .drawer-head { @apply flex items-center justify-between border-b border-line py-2.5 pl-5 pr-3 text-sm font-semibold; }
+    .drawer-body { @apply flex-1 space-y-6 overflow-auto px-5 py-4; }
+    .drawer-foot { @apply flex items-center justify-between border-t border-line px-3 py-2.5; }
+    .group-title { @apply mb-2 text-[11px] font-medium uppercase tracking-wider text-muted; }
+    .setting { @apply flex items-center justify-between gap-4 py-1.5; }
+    .setting label, .setting .label { @apply cursor-pointer text-ink; }
+    .setting .hint { @apply block text-xs text-muted; }
+    .setting select, .setting input[type='number'] { @apply h-7 rounded-md border border-line bg-surface px-2 text-ink; }
+    .setting input[type='checkbox'] { @apply size-4 cursor-pointer accent-brand; }
+    .shortcuts { @apply grid grid-cols-[1fr_auto] gap-x-4 gap-y-1.5 text-muted; }
+}

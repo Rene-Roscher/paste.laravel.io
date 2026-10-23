@@ -1,59 +1,25 @@
-import './bootstrap';
+import './theme';
+import './palette';
+import './settings-ui';
+import { getSettings } from './settings';
+import { recordVisit } from './history';
 
-import 'alpinejs';
+const editor = document.getElementById('editor');
 
-// Textarea identation support
-import * as indentation from 'indent-textarea';
-
-const textarea = document.querySelector('textarea');
-
-if (textarea) {
-    indentation.watch(textarea);
-}
-
-// Highlight code blocks and line numbers
-import 'highlightjs-line-numbers.js';
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    document.querySelectorAll('pre code').forEach((block) => {
-        hljs.highlightBlock(block);
-        hljs.lineNumbersBlock(block);
+if (editor?.dataset.mode === 'view' && getSettings().history) {
+    const code = document.getElementById('code-fallback')?.textContent ?? '';
+    const firstLine = code.split('\n').find((l) => l.trim() !== '') ?? '';
+    recordVisit({
+        hash: editor.dataset.hash,
+        createdAt: editor.dataset.createdAt,
+        mine: editor.dataset.mine === '1',
+        forked: editor.dataset.parent === '1',
+        preview: firstLine.trim().slice(0, 80),
+        lines: code.split('\n').length,
     });
-});
-
-// Clipboard
-import ClipboardJS from 'clipboard';
-
-new ClipboardJS('.copy-btn');
-
-// Dark mode
-const darkModeToggles = document.getElementsByClassName('darkModeToggle');
-
-for (let i = 0; i < darkModeToggles.length; i++) {
-    darkModeToggles[i].onclick = function () {
-        if (localStorage.theme === 'light') {
-            localStorage.theme = 'dark';
-            document.querySelector('html').classList.add('dark');
-            document.querySelector('html').classList.remove('light');
-        } else {
-            localStorage.theme = 'light';
-            document.querySelector('html').classList.remove('dark');
-            document.querySelector('html').classList.add('light');
-        }
-    };
 }
 
-// Shortcut to save
-document.addEventListener("keydown", keyDownEvent => {
-    if (keyDownEvent.ctrlKey && keyDownEvent.code === "KeyS") {
-        keyDownEvent.preventDefault();
-        document.getElementById('save').click();
-    }
-});
-// WIP
-// document.addEventListener("keydown", keyDownEvent => {
-//     if (keyDownEvent.ctrlKey && keyDownEvent.code === "KeyA") {
-//         keyDownEvent.preventDefault();
-//         window.getSelection().selectAllChildren(document.getElementById('code'));
-//     }
-// });
+if (editor) {
+    // Monaco is large: load it on demand so the page chrome renders immediately.
+    import('./editor').then(({ boot }) => boot());
+}

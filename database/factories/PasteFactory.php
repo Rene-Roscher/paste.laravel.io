@@ -2,21 +2,20 @@
 
 namespace Database\Factories;
 
+use App\Models\Paste;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
 
+/** @extends Factory<Paste> */
 class PasteFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
-    public function definition()
+    protected $model = Paste::class;
+
+    public function definition(): array
     {
         return [
-            'hash' => Uuid::uuid4()->toString(),
-            'code' => $this->faker->realText(),
+            'hash' => (string) Str::uuid(),
+            'code' => fake()->realText(),
         ];
     }
 }
