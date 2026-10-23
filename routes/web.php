@@ -3,9 +3,13 @@
 use App\Http\Controllers\PastesController;
 use Illuminate\Support\Facades\Route;
 
+Route::pattern('paste', '[A-Za-z0-9_-]+');
+
 Route::view('/', 'create')->name('home');
-Route::post('/', [PastesController::class, 'post']);
+Route::post('/', [PastesController::class, 'post'])->middleware('throttle:30,1');
+
+Route::get('fork/{paste}', [PastesController::class, 'edit'])->name('edit');
+Route::post('fork/{paste}', [PastesController::class, 'fork'])->middleware('throttle:30,1');
+
 Route::get('{paste}', [PastesController::class, 'show'])->name('show');
 Route::get('{paste}/raw', [PastesController::class, 'raw'])->name('raw');
-Route::get('fork/{paste}', [PastesController::class, 'edit'])->name('edit');
-Route::post('fork/{paste}', [PastesController::class, 'fork']);

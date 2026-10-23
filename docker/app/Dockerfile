@@ -1,4 +1,4 @@
-FROM ghcr.io/rene-roscher/php-docker:php-8.2 AS APP_BASE
+FROM ghcr.io/rene-roscher/php-docker:php-8.3 AS APP_BASE
 
 WORKDIR /var/www
 

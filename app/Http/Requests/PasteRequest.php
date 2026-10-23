@@ -2,29 +2,28 @@
 
 namespace App\Http\Requests;
 
+use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PasteRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
-    {
-        return true;
-    }
+    /** Size of a MySQL TEXT column. */
+    private const MAX_BYTES = 65535;
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'code' => 'required|max:50000',
+            'code' => [
+                'required',
+                'string',
+                'max:50000',
+                // Multibyte characters could otherwise overflow the TEXT column.
+                function (string $attribute, mixed $value, Closure $fail) {
+                    if (strlen($value) > self::MAX_BYTES) {
+                        $fail('The code is too large.');
+                    }
+                },
+            ],
         ];
     }
 }

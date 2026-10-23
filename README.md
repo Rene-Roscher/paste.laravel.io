@@ -19,9 +19,9 @@ This is the repository for [the Laravel.io pastebin](https://paste.laravel.io). 
 
 The following tools are required in order to start the installation.
 
-- PHP 8.2
+- PHP 8.3+
 - [Composer](https://getcomposer.org/download/)
-- [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [Node.js 22+ / NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 
 ## Installation
 
@@ -29,8 +29,9 @@ The following tools are required in order to start the installation.
 2. Copy the `.env.example` file to `.env`
 3. Install the PHP dependencies with `composer install`
 4. Generate a new app key with `php artisan key:generate`
-5. Install and compile the front-end dependencies with `npm install && npm run dev`
-6. Serve the website locally by running `php artisan serve`
+5. Run the migrations with `php artisan migrate`
+6. Install and compile the front-end dependencies with `npm install && npm run build` (use `npm run dev` while developing)
+7. Serve the website locally by running `php artisan serve`
 
 You can now visit the app in your browser by visiting [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
@@ -39,8 +40,17 @@ You can now visit the app in your browser by visiting [http://127.0.0.1:8000](ht
 Command | Description
 --- | ---
 **`php artisan test`** | Run the tests
-`php artisan migrate:fresh --seed` | Reset the database
+`php artisan migrate:fresh` | Reset the database
 `npm run dev` | Watch for changes in CSS and JS files
+
+## Upgrading an existing installation
+
+The `pastes` table and its three migrations are unchanged, so an existing database (MySQL/MariaDB) keeps working as is:
+`php artisan migrate` reports "Nothing to migrate" and no data is touched. Existing `.env` files keep working
+(`CACHE_DRIVER` is still read as a fallback for `CACHE_STORE`); `APP_KEY`, `APP_URL` and the `DB_*` values stay the same.
+
+The editor is [Monaco](https://microsoft.github.io/monaco-editor/), bundled by Vite together with the fonts
+(Inter and JetBrains Mono), so the app makes no requests to third-party hosts.
 
 ## Maintainers
 
