@@ -1,5 +1,6 @@
 import { clearHistory, loadHistory, removeFromHistory } from './history';
-import { setTheme } from './theme';
+import { toggleTheme } from './theme';
+import { openSettings } from './settings-ui';
 
 const palette = document.getElementById('palette');
 const input = document.getElementById('palette-input');
@@ -25,8 +26,13 @@ function commands() {
     const here = document.getElementById('editor')?.dataset;
     const cmds = [
         { label: 'New paste', hint: 'Command', run: () => { location.href = '/'; } },
-        { label: 'Toggle light / dark theme', hint: 'Command', run: () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark') },
+        { label: 'Toggle light / dark theme', hint: 'Command', run: toggleTheme },
+        { label: 'Open settings', hint: 'Ctrl ,', run: openSettings },
     ];
+    const toggle = document.getElementById('view-toggle');
+    if (toggle && !toggle.hidden) {
+        cmds.push({ label: 'Toggle markdown preview', hint: 'Command', run: () => document.querySelector('#view-toggle button[aria-pressed="false"]')?.click() });
+    }
     if (here?.hash) {
         cmds.push(
             { label: 'Copy paste', hint: 'Command', run: () => document.getElementById('copy')?.click() },

@@ -7,3 +7,5 @@
 {{ old('code', $code ?? '') }}</textarea>
     <div id="editor" class="editor" data-mode="edit" hidden></div>
 </form>
+
+<div id="preview" class="preview" hidden><div class="preview-body"></div></div>

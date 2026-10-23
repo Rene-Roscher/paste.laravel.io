@@ -7,6 +7,13 @@ export const LANGUAGES = [
     ['csharp', 'C#'], ['ruby', 'Ruby'], ['twig', 'Twig'],
 ];
 
+// Needs two independent markdown signals (or a ## heading), so `# comment` lines in shell/python do not match.
+function looksLikeMarkdown(text) {
+    if (/^#{2,6}\s+\S/m.test(text)) return true;
+    const signals = [/^#\s+\S/m, /^```/m, /^[-*]\s+\S/m, /\[[^\]\n]+\]\([^)\n]+\)/, /\*\*\S[^*\n]*\*\*/, /^>\s+\S/m];
+    return signals.filter((re) => re.test(text)).length >= 2;
+}
+
 // Old pastes have no stored language, so guess from the content. Cheap heuristics only.
 export function detectLanguage(code) {
     const head = code.slice(0, 4000);
@@ -23,9 +30,10 @@ export function detectLanguage(code) {
         ['javascript', /\b(const|let|var)\s+\w+\s*=|=>|\bfunction\s*\w*\(|console\.log/],
         ['css', /^[\s\S]*[.#]?[\w-]+\s*\{[^}]*:[^}]*;[^}]*\}/],
         ['yaml', /^\s*[\w-]+:\s*(\S.*)?\n\s+[\w-]+:/m],
-        ['markdown', /^#{1,6}\s+\S|^\s*[-*]\s+\S.*\n\s*[-*]\s+\S|```/m],
         ['ini', /^[A-Z][A-Z0-9_]*=.*$/m],
     ];
+
+    if (!/^\s*(<\?php|<\?xml|<!doctype|#!)/i.test(head) && looksLikeMarkdown(head)) return 'markdown';
 
     for (const [lang, re] of rules) {
         if (re.test(head)) return lang;

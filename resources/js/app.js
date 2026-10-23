@@ -1,10 +1,12 @@
 import './theme';
 import './palette';
+import './settings-ui';
+import { getSettings } from './settings';
 import { recordVisit } from './history';
 
 const editor = document.getElementById('editor');
 
-if (editor?.dataset.mode === 'view') {
+if (editor?.dataset.mode === 'view' && getSettings().history) {
     const code = document.getElementById('code-fallback')?.textContent ?? '';
     const firstLine = code.split('\n').find((l) => l.trim() !== '') ?? '';
     recordVisit({

@@ -9,6 +9,7 @@
         'reset' => 'M3 12a9 9 0 1 0 3-6.7M3 4v5h5',
         'back' => 'M10 6l-6 6 6 6M4 12h16',
         'history' => 'M3 12a9 9 0 1 0 3-6.7M3 4v5h5M12 7v5l3 2',
+        'settings' => 'M4 7h9M17 7h3M4 17h3M11 17h9M15 5v4M9 15v4',
         'download' => 'M12 4v11M7 11l5 5 5-5M5 20h14',
     ];
 @endphp

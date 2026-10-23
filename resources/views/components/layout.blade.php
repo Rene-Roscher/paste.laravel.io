@@ -35,7 +35,15 @@
             <span class="filename" title="{{ $title }}">{{ $title }}</span>
         @endisset
         <nav class="actions">
+            <div class="segmented" id="view-toggle" role="group" aria-label="View" hidden>
+                <button type="button" class="btn" id="view-source" aria-pressed="true">Source</button>
+                <button type="button" class="btn" id="view-preview" aria-pressed="false">Preview</button>
+            </div>
             {{ $actions ?? '' }}
+            <span class="sep" aria-hidden="true"></span>
+            <button type="button" class="btn" id="open-settings" title="Settings (Ctrl+,)" aria-label="Settings">
+                <x-icon name="settings" /><span>Settings</span>
+            </button>
             <button type="button" class="btn" id="open-palette" title="History &amp; commands (Ctrl+K)">
                 <x-icon name="history" /><span>History</span><kbd>Ctrl K</kbd>
             </button>
@@ -63,11 +71,77 @@
         </button>
     </footer>
 </div>
-<div id="palette" class="palette" role="dialog" aria-modal="true" aria-label="History and commands" hidden>
+<div id="palette" class="overlay palette" role="dialog" aria-modal="true" aria-label="History and commands" hidden>
     <div class="palette-box">
         <input id="palette-input" type="text" placeholder="Search history or type a command…" autocomplete="off" spellcheck="false" aria-label="Search">
         <ul id="palette-list" role="listbox"></ul>
         <div class="palette-foot"><span>↑↓ navigate</span><span>↵ open</span><span>esc close</span></div>
+    </div>
+</div>
+<div id="settings" class="overlay drawer" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+    <div class="drawer-panel">
+        <div class="drawer-head">
+            <span id="settings-title">Settings</span>
+            <button type="button" class="btn" id="settings-close" aria-label="Close settings">✕</button>
+        </div>
+        <div class="drawer-body">
+            <p class="text-xs text-muted">Saved in this browser only.</p>
+
+            <section>
+                <h3 class="group-title">Appearance</h3>
+                <div class="setting"><label for="s-theme">Theme</label>
+                    <select id="s-theme" data-setting="theme"><option value="system">System</option><option value="dark">Dark</option><option value="light">Light</option></select></div>
+                <div class="setting"><label for="s-font">Editor font</label>
+                    <select id="s-font" data-setting="fontFamily"><option value="mono">Monospace</option><option value="sans">Proportional</option></select></div>
+                <div class="setting"><label for="s-size">Font size</label>
+                    <select id="s-size" data-setting="fontSize">@foreach ([12, 13, 14, 15, 16, 18, 20, 24] as $size)<option value="{{ $size }}">{{ $size }} px</option>@endforeach</select></div>
+            </section>
+
+            <section>
+                <h3 class="group-title">Editor</h3>
+                <div class="setting"><label for="s-minimap">Code overview on the right<span class="hint">The minimap next to the scrollbar</span></label>
+                    <input id="s-minimap" type="checkbox" data-setting="minimap"></div>
+                <div class="setting"><label for="s-lines">Line numbers</label><input id="s-lines" type="checkbox" data-setting="lineNumbers"></div>
+                <div class="setting"><label for="s-fold">Code folding</label><input id="s-fold" type="checkbox" data-setting="folding"></div>
+                <div class="setting"><label for="s-wrap">Word wrap<span class="hint">Auto wraps text and markdown, not code</span></label>
+                    <select id="s-wrap" data-setting="wordWrap"><option value="auto">Auto</option><option value="on">On</option><option value="off">Off</option></select></div>
+                <div class="setting"><label for="s-ws">Show whitespace</label>
+                    <select id="s-ws" data-setting="whitespace"><option value="none">Never</option><option value="selection">In selection</option><option value="all">Always</option></select></div>
+                <div class="setting"><label for="s-tab">Tab size</label>
+                    <select id="s-tab" data-setting="tabSize"><option value="2">2</option><option value="4">4</option><option value="8">8</option></select></div>
+                <div class="setting"><label for="s-spaces">Indent with spaces</label><input id="s-spaces" type="checkbox" data-setting="insertSpaces"></div>
+                <div class="setting"><label for="s-close">Auto-close brackets and quotes<span class="hint">Auto skips plain text and markdown</span></label>
+                    <select id="s-close" data-setting="autoClosing"><option value="auto">Auto</option><option value="on">On</option><option value="off">Off</option></select></div>
+            </section>
+
+            <section>
+                <h3 class="group-title">Markdown</h3>
+                <div class="setting"><label for="s-md">Open markdown pastes as</label>
+                    <select id="s-md" data-setting="markdown"><option value="preview">Preview</option><option value="source">Source</option></select></div>
+            </section>
+
+            <section>
+                <h3 class="group-title">History</h3>
+                <div class="setting"><label for="s-history">Remember pastes I open<span class="hint">Shown in the Ctrl+K overview</span></label>
+                    <input id="s-history" type="checkbox" data-setting="history"></div>
+                <button type="button" class="btn" id="settings-clear-history">Clear history</button>
+            </section>
+
+            <section>
+                <h3 class="group-title">Shortcuts</h3>
+                <div class="shortcuts">
+                    <span>Save paste</span><kbd>Ctrl S</kbd>
+                    <span>History &amp; commands</span><kbd>Ctrl K</kbd>
+                    <span>Settings</span><kbd>Ctrl ,</kbd>
+                    <span>Toggle word wrap</span><kbd>Alt Z</kbd>
+                    <span>Find</span><kbd>Ctrl F</kbd>
+                    <span>Close dialogs</span><kbd>Esc</kbd>
+                </div>
+            </section>
+        </div>
+        <div class="drawer-foot">
+            <button type="button" class="btn" id="settings-reset">Reset to defaults</button>
+        </div>
     </div>
 </div>
 </body>
