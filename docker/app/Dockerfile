@@ -1,7 +1,9 @@
 # Self-contained image: nginx + php-fpm (supervised) on the official PHP image.
 # Expects `composer install --no-dev` and `npm run build` to have run before `docker build`
 # (see .github/workflows/build.yml).
-FROM php:8.4-fpm-alpine
+# Pinned to one exact image: the PHP security release of 19.11.2026 is in 8.4.28. A floating tag
+# could keep serving a cached older PHP after a rebuild. Move it on purpose.
+FROM php:8.4.28-fpm-alpine3.24@sha256:d4fac3a1247d1b6644f377b9769dc10a0faa8a6b42a63d961fce1b56289b7f0e
 
 WORKDIR /var/www
 
